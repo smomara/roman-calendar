@@ -4,7 +4,6 @@ module Data.Time.Calendar.RomanCatholic (
   LiturgicalSeason (..),
   CelebrationInfo (..),
   liturgicalSeason,
-  celebrationInfo,
 ) where
 
 import Data.Time (Day, DayOfWeek (..), addDays, dayOfWeek, fromGregorian, toGregorian)
@@ -50,6 +49,7 @@ data YearDates = YearDates
   , easterDate :: Day
   , pentecostDate :: Day
   , ordinaryTime2Start :: Day
+  , christKingDate :: Day
   }
 
 yearDates :: Integer -> YearDates
@@ -64,6 +64,7 @@ yearDates year =
     , easterDate = easter
     , pentecostDate = addDays 49 easter
     , ordinaryTime2Start = addDays 1 (addDays 49 easter)
+    , christKingDate = calculateChristKingDate year
     }
  where
   easter = gregorianEaster year
@@ -84,21 +85,24 @@ calculateBaptismDate year =
         _ -> 7 - fromEnum (dayOfWeek epiphany)
    in addDays (fromIntegral daysToAdd) epiphany
 
+calculateChristKingDate :: Integer -> Day
+calculateChristKingDate = addDays (-7) . calculateAdventStart . (+ 1)
+
 liturgicalSeason :: Day -> LiturgicalSeason
 liturgicalSeason day
-  | day `inRange` (adventStart dates, christmasStart dates) = Advent
-  | (month == 12 && day >= christmasStart dates) || (month == 1 && day <= baptismDate (yearDates nextYear)) = Christmas
-  | day `inRange` (baptismDate dates, lentStart dates) = OrdinaryTime1
-  | day `inRange` (lentStart dates, holyWeekStart dates) = Lent
-  | day `inRange` (holyWeekStart dates, triduumStart dates) = HolyWeek
-  | day `inRange` (triduumStart dates, easterDate dates) = Triduum
-  | day `inRange` (easterDate dates, ordinaryTime2Start dates) = Easter
+  | inRange (adventStart dates) (christmasStart dates) = Advent
+  | inChristmasSeason = Christmas
+  | inRange (baptismDate dates) (lentStart dates) = OrdinaryTime1
+  | inRange (lentStart dates) (holyWeekStart dates) = Lent
+  | inRange (holyWeekStart dates) (triduumStart dates) = HolyWeek
+  | inRange (triduumStart dates) (easterDate dates) = Triduum
+  | inRange (easterDate dates) (ordinaryTime2Start dates) = Easter
   | otherwise = OrdinaryTime2
  where
   (currentYear, month, _) = toGregorian day
   dates = yearDates currentYear
-  nextYear = currentYear + 1
-  inRange d (start, end) = d >= start && d < end
-
-celebrationInfo :: Day -> CelebrationInfo
-celebrationInfo = undefined -- TODO
+  nextYearDates = yearDates (currentYear + 1)
+  inRange a b = day >= a && day < b
+  inChristmasSeason =
+    (month == 12 && day >= christmasStart dates)
+      || (month == 1 && day <= baptismDate nextYearDates)
