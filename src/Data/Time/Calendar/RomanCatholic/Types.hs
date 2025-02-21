@@ -29,6 +29,7 @@ data CelebrationInfo = CelebrationInfo
   { celebrationType :: Celebration
   , celebrationColor :: LiturgicalColor
   , celebrationSeason :: LiturgicalSeason
+  , optionalMemorials :: [(Celebration, LiturgicalColor)]
   }
   deriving (Show, Eq)
 
