@@ -36,7 +36,7 @@ import Data.Time.Calendar.RomanCatholic
 main :: IO ()
 main = do
     let date = fromGregorian 2025 4 20 -- Easter Day
-    print $ celebrationInfo date
+    print $ getCelebrationInfo date
 ```
 
 This will output the celebration information for Easter Day,
