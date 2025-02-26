@@ -5,8 +5,34 @@ import Data.Time.Calendar.RomanCatholic.Types
 
 sanctoralCelebrations :: [CelebrationRule]
 sanctoralCelebrations =
-  [ -- January
-    fixedDateRule 1 1 "Mary, Mother of God" Solemnity White 3
+  concat
+    [ januaryCelebrations
+    , februaryCelebrations
+    , marchCelebrations
+    , aprilCelebrations
+    , mayCelebrations
+    , juneCelebrations
+    , julyCelebrations
+    , augustCelebrations
+    , septemberCelebrations
+    , octoberCelebrations
+    , novemberCelebrations
+    , decemberCelebrations
+    ]
+
+fixedDateRule :: Int -> Int -> String -> (String -> Celebration) -> LiturgicalColor -> Int -> CelebrationRule
+fixedDateRule month day name celebType col rank =
+  CelebrationRule
+    { matchesDay = \(_, d) ->
+        let (_, m, dm) = toGregorian d in m == month && dm == day
+    , celebration = \_ _ -> celebType name
+    , color = col
+    , precedence = rank
+    }
+
+januaryCelebrations :: [CelebrationRule]
+januaryCelebrations =
+  [ fixedDateRule 1 1 "Mary, Mother of God" Solemnity White 3
   , fixedDateRule 1 2 "Saints Basil the Great and Greogry Nazianzen" Memorial White 10
   , fixedDateRule 1 3 "The Most Holy Name of Jesus" OptionalMemorial White 12
   , fixedDateRule 1 5 "Saint John Neumann" Memorial White 10
@@ -24,8 +50,11 @@ sanctoralCelebrations =
   , fixedDateRule 1 27 "Saint Angela Merici" OptionalMemorial White 12
   , fixedDateRule 1 28 "Saint Thomas Aquinas" Memorial White 10
   , fixedDateRule 1 31 "Saint John Bosco" Memorial White 10
-  , -- February
-    fixedDateRule 2 2 "The Presentation of the Lord" Feast White 5
+  ]
+
+februaryCelebrations :: [CelebrationRule]
+februaryCelebrations =
+  [ fixedDateRule 2 2 "The Presentation of the Lord" Feast White 5
   , fixedDateRule 2 3 "Saint Blase" OptionalMemorial Red 12
   , fixedDateRule 2 3 "Saint Ansgar" OptionalMemorial White 12
   , fixedDateRule 2 5 "Saint Agatha" Memorial Red 10
@@ -40,8 +69,11 @@ sanctoralCelebrations =
   , fixedDateRule 2 22 "The Chair of Peter" Feast White 7
   , fixedDateRule 2 23 "Saint Polycarp" Memorial Red 10
   , fixedDateRule 2 27 "Saint Gregory of Narek" OptionalMemorial White 12
-  , -- March
-    fixedDateRule 3 4 "Saint Casimir" OptionalMemorial Green 12
+  ]
+
+marchCelebrations :: [CelebrationRule]
+marchCelebrations =
+  [ fixedDateRule 3 4 "Saint Casimir" OptionalMemorial Green 12
   , fixedDateRule 3 7 "Saints Perpetua and Felicity" Memorial Red 10
   , fixedDateRule 3 8 "Saint John of God" OptionalMemorial White 12
   , fixedDateRule 3 9 "Saint Francis of Rome" OptionalMemorial White 12
@@ -50,8 +82,11 @@ sanctoralCelebrations =
   , fixedDateRule 3 19 "Saint Joseph" Solemnity White 3
   , fixedDateRule 3 23 "Saint Turibius de Mogrojevo" OptionalMemorial White 12
   , fixedDateRule 3 25 "The Annunciation of the Lord" Solemnity White 3
-  , -- April
-    fixedDateRule 4 2 "Saint Francis of Paola" OptionalMemorial White 12
+  ]
+
+aprilCelebrations :: [CelebrationRule]
+aprilCelebrations =
+  [ fixedDateRule 4 2 "Saint Francis of Paola" OptionalMemorial White 12
   , fixedDateRule 4 4 "Saint Isidore of Seville" OptionalMemorial White 12
   , fixedDateRule 4 5 "Saint Vincent Ferrer" OptionalMemorial White 12
   , fixedDateRule 4 7 "Saint John Baptist de la Salle" Memorial White 10
@@ -66,8 +101,11 @@ sanctoralCelebrations =
   , fixedDateRule 4 28 "Saint Louis Mary de Montfort" OptionalMemorial White 12
   , fixedDateRule 4 29 "Saint Catherine of Siena" Memorial White 10
   , fixedDateRule 4 30 "Saint Pius V" OptionalMemorial White 12
-  , -- May
-    fixedDateRule 5 1 "Saint Joseph the Worker" OptionalMemorial White 12
+  ]
+
+mayCelebrations :: [CelebrationRule]
+mayCelebrations =
+  [ fixedDateRule 5 1 "Saint Joseph the Worker" OptionalMemorial White 12
   , fixedDateRule 5 2 "Saint Athanasius" Memorial White 10
   , fixedDateRule 5 3 "Saints Philip and James" Feast Red 7
   , fixedDateRule 5 10 "Saint John of Avila" OptionalMemorial White 10
@@ -86,8 +124,11 @@ sanctoralCelebrations =
   , fixedDateRule 5 26 "Saint Philip Neri" Memorial White 10
   , fixedDateRule 5 27 "Saint Augustine of Canterbury" OptionalMemorial White 12
   , fixedDateRule 5 31 "The Visitation of the Blessed Virgin Mary" Feast White 7
-  , -- June
-    fixedDateRule 6 1 "Saint Justin" Memorial Red 10
+  ]
+
+juneCelebrations :: [CelebrationRule]
+juneCelebrations =
+  [ fixedDateRule 6 1 "Saint Justin" Memorial Red 10
   , fixedDateRule 6 2 "Saints Marcellinus and Peter" OptionalMemorial Red 12
   , fixedDateRule 6 3 "Saint Charles Lwanga and Companions" Memorial Red 10
   , fixedDateRule 6 5 "Saint Boniface" Memorial Red 10
@@ -104,8 +145,11 @@ sanctoralCelebrations =
   , fixedDateRule 6 28 "Saint Irenaeus" OptionalMemorial Red 10
   , fixedDateRule 6 29 "Saints Peter and Paul" Solemnity Red 3
   , fixedDateRule 6 30 "The First Martyrs of the Holy Roman Church" OptionalMemorial Red 12
-  , -- July
-    fixedDateRule 7 1 "Blessed Junípero Serra" OptionalMemorial White 12
+  ]
+
+julyCelebrations :: [CelebrationRule]
+julyCelebrations =
+  [ fixedDateRule 7 1 "Blessed Junípero Serra" OptionalMemorial White 12
   , fixedDateRule 7 3 "Saint Thomas" Feast Red 7
   , fixedDateRule 7 4 "Saint Elizabeth of Portugal" OptionalMemorial White 12
   , fixedDateRule 7 5 "Saint Anthony Mary Zaccaria" OptionalMemorial White 12
@@ -125,8 +169,11 @@ sanctoralCelebrations =
   , fixedDateRule 7 29 "Saints Martha, Mary, and Lazarus" Memorial White 10
   , fixedDateRule 7 30 "Saint Peter Chrysologus" OptionalMemorial White 12
   , fixedDateRule 7 31 "Saint Ignatius of Loyola" Memorial White 10
-  , -- August
-    fixedDateRule 8 1 "Saint Alphonsus Liguori" Memorial White 10
+  ]
+
+augustCelebrations :: [CelebrationRule]
+augustCelebrations =
+  [ fixedDateRule 8 1 "Saint Alphonsus Liguori" Memorial White 10
   , fixedDateRule 8 2 "Saint Eusebius of Vercelli" OptionalMemorial White 12
   , fixedDateRule 8 2 "Saint Peter Julian Eymard" OptionalMemorial White 12
   , fixedDateRule 8 4 "Saint John Vianney" Memorial White 10
@@ -154,8 +201,11 @@ sanctoralCelebrations =
   , fixedDateRule 8 27 "Saint Monica" Memorial White 10
   , fixedDateRule 8 28 "Saint Augustine" Memorial White 10
   , fixedDateRule 8 29 "The Passion of Saint John the Baptist" Memorial Red 10
-  , -- September
-    fixedDateRule 9 3 "Saint Gregory the Great" Memorial White 10
+  ]
+
+septemberCelebrations :: [CelebrationRule]
+septemberCelebrations =
+  [ fixedDateRule 9 3 "Saint Gregory the Great" Memorial White 10
   , fixedDateRule 9 5 "Saint Teresa of Calcutta" OptionalMemorial White 10
   , fixedDateRule 9 8 "The Nativity of the Blessed Virgin Mary" Feast White 7
   , fixedDateRule 9 12 "The Most Holy Name of Mary" OptionalMemorial White 12
@@ -175,8 +225,11 @@ sanctoralCelebrations =
   , fixedDateRule 9 28 "Saint Lawrence Ruiz and companions" OptionalMemorial Red 12
   , fixedDateRule 9 29 "Saints Michael, Gabriel, and Raphael" Feast White 7
   , fixedDateRule 9 30 "Saint Jerome" Memorial White 10
-  , -- October
-    fixedDateRule 10 1 "Saint Thérèse of the Child Jesus" Memorial White 10
+  ]
+
+octoberCelebrations :: [CelebrationRule]
+octoberCelebrations =
+  [ fixedDateRule 10 1 "Saint Thérèse of the Child Jesus" Memorial White 10
   , fixedDateRule 10 2 "The Holy Guardian Angels" Memorial White 10
   , fixedDateRule 10 4 "Saint Francis of Assisi" Memorial White 10
   , fixedDateRule 10 6 "Saint Bruno" OptionalMemorial White 10
@@ -192,17 +245,20 @@ sanctoralCelebrations =
   , fixedDateRule 10 17 "Saint Ignatius of Antioch" Memorial Red 10
   , fixedDateRule 10 18 "Saint Luke" Feast Red 7
   , fixedDateRule 10 19 "Saints Isaac Jogues and John de Brébeuf and Companions" Memorial Red 10
-  , fixedDateRule 10 20 "Saint Paul of the Corss" OptionalMemorial White 12
+  , fixedDateRule 10 20 "Saint Paul of the Cross" OptionalMemorial White 12
   , fixedDateRule 10 23 "Saint John of Capistrano" OptionalMemorial White 12
   , fixedDateRule 10 28 "Saints Simon and Jude" Feast Red 7
-  , -- November
-    fixedDateRule 11 1 "All Saints" Solemnity White 3
+  ]
+
+novemberCelebrations :: [CelebrationRule]
+novemberCelebrations =
+  [ fixedDateRule 11 1 "All Saints" Solemnity White 3
   , fixedDateRule 11 2 "The Commemoration of All the Faithful Departed (All Souls)" Feast White 7
   , fixedDateRule 11 3 "Saint Martin de Porres" OptionalMemorial White 12
   , fixedDateRule 11 4 "Saint Charles Borromeo" Memorial White 10
   , fixedDateRule 11 9 "The Dedication of the Lateran Basilica" Feast White 7
   , fixedDateRule 11 10 "Saint Leo the Great" Memorial White 10
-  , fixedDateRule 11 11 "Saint Maritn of Tours" Memorial White 10
+  , fixedDateRule 11 11 "Saint Martin of Tours" Memorial White 10
   , fixedDateRule 11 12 "Saint Josaphat" Memorial Red 10
   , fixedDateRule 11 15 "Saint Albert the Great" OptionalMemorial White 12
   , fixedDateRule 11 16 "Saint Margaret of Scotland" OptionalMemorial White 12
@@ -217,8 +273,11 @@ sanctoralCelebrations =
   , fixedDateRule 11 24 "Saint Andrew Dũng-Lạc and Companions" Memorial Red 10
   , fixedDateRule 11 25 "Saint Catherine of Alexandria" OptionalMemorial Red 12
   , fixedDateRule 11 30 "Saint Andrew" Feast Red 7
-  , -- December
-    fixedDateRule 12 3 "Saint Francis Xavier" Memorial White 10
+  ]
+
+decemberCelebrations :: [CelebrationRule]
+decemberCelebrations =
+  [ fixedDateRule 12 3 "Saint Francis Xavier" Memorial White 10
   , fixedDateRule 12 4 "Saint John Damascene" OptionalMemorial White 12
   , fixedDateRule 12 6 "Saint Nicholas" OptionalMemorial White 12
   , fixedDateRule 12 7 "Saint Ambrose" Memorial White 10
@@ -236,8 +295,3 @@ sanctoralCelebrations =
   , fixedDateRule 12 29 "Saint Thomas Becket" OptionalMemorial Red 12
   , fixedDateRule 12 31 "Saint Sylvester I" OptionalMemorial White 12
   ]
- where
-  fixedDateRule month day name cType =
-    CelebrationRule
-      (\_ d -> let (_, m, dm) = toGregorian d in m == month && dm == day)
-      (\_ _ -> cType name)

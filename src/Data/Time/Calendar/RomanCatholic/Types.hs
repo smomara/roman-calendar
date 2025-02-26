@@ -48,7 +48,7 @@ data YearDates = YearDates
   deriving (Show)
 
 data CelebrationRule = CelebrationRule
-  { matchesDay :: YearDates -> Day -> Bool
+  { matchesDay :: (YearDates, Day) -> Bool
   , celebration :: YearDates -> Day -> Celebration
   , color :: LiturgicalColor
   , precedence :: Int

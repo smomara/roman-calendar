@@ -12,27 +12,32 @@ import Data.Time.Calendar.RomanCatholic.Types
 import Data.Time.Calendar.RomanCatholic.YearDates (computeYearDates)
 
 getCelebrationInfo :: Day -> Maybe CelebrationInfo
-getCelebrationInfo day =
+getCelebrationInfo day = do
   let season = getLiturgicalSeason yearDates day
       allRules = sortOn precedence $ temporalCelebrations ++ sanctoralCelebrations
       (optionalRules, otherRules) = partition isOptionalMemorial allRules
-      primaryRule = find (matchesDayForYear day) otherRules
-      optionalCelebrations = case primaryRule of
-        Just rule -> filter ((< precedence rule) . precedence) $ filter (matchesDayForYear day) optionalRules
-        Nothing -> filter (matchesDayForYear day) optionalRules
-   in case primaryRule of
-        Just rule ->
-          Just $
-            CelebrationInfo
-              (celebration rule yearDates day)
-              (color rule)
-              season
-              (map (getCelebrationWithColor day) optionalCelebrations)
-        Nothing -> Nothing
+
+  primaryRule <- find (`matchesDay` (yearDates, day)) otherRules
+
+  let optionalCelebrations =
+        filter
+          ( \r ->
+              matchesDay r (yearDates, day)
+                && precedence r < precedence primaryRule
+          )
+          optionalRules
+
+  return $
+    CelebrationInfo
+      { celebrationType = celebration primaryRule yearDates day
+      , celebrationColor = color primaryRule
+      , celebrationSeason = season
+      , optionalMemorials = map (\r -> (celebration r yearDates day, color r)) optionalCelebrations
+      }
  where
-  yearDates = let (year, _, _) = toGregorian day in computeYearDates year
-  isOptionalMemorial rule = case celebration rule yearDates day of
-    OptionalMemorial _ -> True
-    _ -> False
-  matchesDayForYear d rule = matchesDay rule yearDates d
-  getCelebrationWithColor d rule = (celebration rule yearDates d, color rule)
+  (year, _, _) = toGregorian day
+  yearDates = computeYearDates year
+  isOptionalMemorial rule =
+    case celebration rule yearDates day of
+      OptionalMemorial _ -> True
+      _ -> False
